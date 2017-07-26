@@ -1,0 +1,14 @@
+Benchmarks per simulation of x contestants (v1.0)
+0.002x^2 + 0.04x ms
+2  - 0.047 ms
+3  - 0.09  ms
+4  - 0.14  ms
+5  - 0.215 ms
+6  - 0.293 ms
+7  - 0.384 ms
+8  - 0.54  ms
+9  - 0.633 ms
+10 - 0.668 ms
+11 - 0.8   ms
+12 - 0.856 ms
+32 - 3.28  ms
