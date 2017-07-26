@@ -1,0 +1,10 @@
+﻿  Main.cpp
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(47): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(173): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(209): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(220): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(144): warning C4101: 'e': unreferenced local variable
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(154): warning C4101: 'e': unreferenced local variable
+c:\users\eli\documents\visual studio 2015\projects\twowsimulator\twowsimulator\main.cpp(164): warning C4101: 'e': unreferenced local variable
+  TWOWSimulator.vcxproj -> c:\users\eli\documents\visual studio 2015\Projects\TWOWSimulator\Debug\TWOWSimulator.exe
+  TWOWSimulator.vcxproj -> c:\users\eli\documents\visual studio 2015\Projects\TWOWSimulator\Debug\TWOWSimulator.pdb (Full PDB)

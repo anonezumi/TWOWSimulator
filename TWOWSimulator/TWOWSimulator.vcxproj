@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2FF94218-0183-44F4-8C55-9B50BE77C79A}</ProjectGuid>
+    <ProjectGuid>{D1B68C1A-871B-455E-9CBF-FEE59E6E65AC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TWOWSimulator</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>

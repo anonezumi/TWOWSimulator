@@ -1,9 +1,9 @@
-//made by anonymouse#1643, read readme.txt for more info and howto
-#include <iostream>
-#include <random>
-#include <chrono>
-#include <string>
-#include <fstream>
+//made by anonymouse#1643, read readme.md for more info and howto
+#include <iostream> //cout
+#include <random> //normal_distribution
+#include <chrono> //system_clock
+#include <string> //better than c-style, or so says SO
+#include <fstream> //read from contestantdata.txt
 struct Contestant
 {
     double avgRS;
@@ -15,7 +15,7 @@ struct Contestant
     std::string name;
     int *rounds;
     int numRounds;
-    Contestant()
+    Contestant() //this default should never be in the array for long
     {
         avgRS = 50;
         stDev = 10;
@@ -26,7 +26,7 @@ struct Contestant
         prized = false;
         rounds = nullptr;
     }
-    Contestant(double pavgRS, double pstDev, int pnumRounds, std::string pname)
+    Contestant(double pavgRS, double pstDev, int pnumRounds, std::string pname) //this is the only constructor I call
     {
         avgRS = pavgRS;
         stDev = pstDev;
@@ -42,21 +42,21 @@ struct Contestant
             rounds[i] = 0;
         }
     }
-    void Randomize(bool singleMode)
+    void Randomize(bool singleMode) //randomize the score. should probably move the cout to main but im lazy
     {
         std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
         std::normal_distribution<double> normDist(avgRS, stDev);
         score = normDist(generator);
         if(singleMode) std::cout << name << " got " << score << ".\n";
     }
-    void Reset()
+    void Reset() //between games
     {
         alive = true;
         score = 0;
     }
 };
 
-Contestant *GetWinner(Contestant *contestants, int contestantNum)
+Contestant *GetWinner(Contestant *contestants, int contestantNum) //if there's only one contestant where alive=true, return a pointer to it
 {
     Contestant *winner = nullptr;
     for (int i = 0; i < contestantNum; ++i)
@@ -70,7 +70,7 @@ Contestant *GetWinner(Contestant *contestants, int contestantNum)
     return winner;
 }
 
-void ContestantBubbleSort(Contestant *contestants, int contestantNum)
+void ContestantBubbleSort(Contestant *contestants, int contestantNum) //sorts contestants by score, ascending
 {
     bool changed = true;
     Contestant temp;
@@ -90,7 +90,7 @@ void ContestantBubbleSort(Contestant *contestants, int contestantNum)
     }
 }
 
-Contestant *ParseContestantData(int contestantNum, int numRounds)
+Contestant *ParseContestantData(int contestantNum, int numRounds) //reads contestant data from file
 {
     Contestant *contestants = new Contestant[contestantNum];
     std::ifstream data;
@@ -136,7 +136,7 @@ int main(void)
     int currentRoundS = 1;
     int currentRound = 0;
     int numRounds = 0;
-    std::cout << "Type the current round number.\n";
+    std::cout << "Type the current round number.\n"; //maybe remove the requirement of input outside of contestantdata.txt? we'll see
     try
     {
         std::cin >> currentRoundS;
@@ -167,8 +167,8 @@ int main(void)
         sims = 1;
     }
     simsS = sims;
-    if (sims <= 5) singleMode = true;
-    for (double i = contestantNum; i > 1; ++numRounds)
+    if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
+    for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
     {
         int kill = round(i * 3 / 20);
         if (kill == 0) kill = 1;
@@ -176,18 +176,18 @@ int main(void)
     }
     Contestant *contestants = ParseContestantData(contestantNum, numRounds);
     Contestant *winner = nullptr;
-    for (; sims > 0; --sims)
+    for (; sims > 0; --sims) //you think this is bad? I could have used while(sims-->0). be thankful.
     {
         winner = nullptr;
         while (winner == nullptr)
         {
-            if (singleMode) std::cout << "Round " << currentRound + currentRoundS << " start!\n";
+            if (singleMode) std::cout << "Round " << currentRound + currentRoundS << " start!\n"; //eventually I'll replace these couts with my own function
             for (int i = 0; i < contestantNum; ++i)
             {
                 if (contestants[i].alive)
                 {
                     contestants[i].Randomize(singleMode);
-                    if (contestants[i].prized)
+                    if (contestants[i].prized) //this is for double response prizes. should probably clean this up a bit
                     {
                         double temp = contestants[i].score;
                         if(singleMode) std::cout << contestants[i].name << " also had a DRP!\n";
@@ -206,7 +206,7 @@ int main(void)
                     ++alivenum;
                 }
             }
-            int killnum = round((double)(alivenum) * 3 / 20);
+            int killnum = round((double)(alivenum) * 3 / 20); //how many to kill... maybe make death rate customizable in the future? for now, 15%
             if (killnum == 0) killnum = 1;
             for (int i = 0; killnum > 0; ++i)
             {
@@ -218,8 +218,7 @@ int main(void)
                 }
             }
             int prizenum = round((double)(alivenum) / 10);
-            if (prizenum == 0) prizenum = 1;
-            for (int i = contestantNum - 1; prizenum > 0; --i)
+            for (int i = contestantNum - 1; prizenum > 0; --i) //who gets a prize? YOU get a prize!
             {
                 if (contestants[i].alive)
                 {
@@ -228,7 +227,7 @@ int main(void)
                     --prizenum;
                 }
             }
-            for (int i = 0; i < contestantNum; ++i)
+            for (int i = 0; i < contestantNum; ++i) //update survival rates to new data
             {
                 if (contestants[i].alive) contestants[i].rounds[currentRound]++;
             }
@@ -243,15 +242,15 @@ int main(void)
         else
         {
             winner->wins++;
-            if (sims % 1000 == 0)
+            if (sims % 1000 == 0) //because the sims go to fast to cls every sim
             {
                 system("cls");
-                std::cout << 100 * ((double)(simsS - sims) / simsS) << "% complete.\n";
+                std::cout << 100 * ((double)(simsS - sims) / simsS) << "% complete.\n"; //because sometimes, when waiting an hour for sims to complete, you just want to know how far you are...
             }
         }
         currentRound = 0;
     }
-    if (!singleMode)
+    if (!singleMode) //print the data! I can't wait for the day when this is logged into a file...
     {
         double survPercent = 0;
         for (int i = 0; i < numRounds - 1; ++i)
