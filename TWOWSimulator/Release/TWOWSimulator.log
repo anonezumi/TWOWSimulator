@@ -1,0 +1,13 @@
+﻿  Main.cpp
+Main.cpp(47): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+Main.cpp(173): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+Main.cpp(209): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+Main.cpp(220): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+Main.cpp(144): warning C4101: 'e': unreferenced local variable
+Main.cpp(154): warning C4101: 'e': unreferenced local variable
+Main.cpp(164): warning C4101: 'e': unreferenced local variable
+  Generating code
+  All 221 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.exe
+  TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.pdb (Full PDB)
