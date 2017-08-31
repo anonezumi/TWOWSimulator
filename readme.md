@@ -5,9 +5,12 @@ This project aims to simulate [Ten Words of Wisdom](https://www.youtube.com/watc
 Do not redistribute the executable or its source code without including this file. Source code is provided so that you may alter it as you wish, but if you choose to redistribute it, please credit anonymouse#1643 as the original owner.
 
 ## HOWTO:
-There are only 2 steps to calculating TWOW win chances and/or simulating TWOWs.
+There are only 3 steps to calculating TWOW win chances and/or simulating TWOWs.
 
-###Step 1
+### Step 1
+Grab the .exe file from /Release/TWOWSimulator.exe. This step is pretty self explanitory, just click on the "release" folder on the main page of the repository, then click on TWOWSimulator.exe, then click download.
+
+### Step 2
 
 The first step is creating your data file. You should have a file named contestantdata.txt. This is the file in which to put the data concerning the contestants invloved in the simulation (obviously).
 
@@ -15,7 +18,7 @@ The three pieces of data the program needs about each contestant is their name, 
 
 Name
 
-Average raw score
+Average raw score\*
 
 Standard deviation of raw scores
 
@@ -30,11 +33,13 @@ anonymouse
 ----------
 ```
 
-You may add as many contestants as you want to the file. Make sure to keep track of the amount, though, as you will need to input it during step 2.
+You may add as many contestants as you want to the file. Make sure to keep track of the amount, though, as you will need to input it during step 3. **Make sure this file is in the same folder as the program.**
 
-###Step 2
+\*You can also use normalized/relative/standardized ranks for this. In my experience, raw scores make for more accurate reuslts.
 
-The second step is to run the program. You could choose to build the project yourself, using the visual studio project files provided, or run the executable in \Debug. The executable should be called TWOWSimulator.exe, and you run it as you would any program. The program will open a console window, and you will be asked some questions. Here are the questions in order:
+### Step 3
+
+The second step is to run the program. The executable should be called TWOWSimulator.exe, and you run it as you would any program. The program will open a console window, and you will be asked some questions. Here are the questions in order:
 
 #### Type the current round number. 
 This input should be an integer only. The program will not do what you want if it isn't. If you want to simulate starting at round 1, enter the number 1. If you want the simulation to start at round 4, type 4.
@@ -45,4 +50,4 @@ This will typically be the same amount of contestants as there are in contestant
 #### Type the number of simulations to perform.
 If this number is 5 or less, the program will reveal results in more detail, showing the generated scores for each of the contestants. There is no guarantee these generated scores are technically possible in TWOW. This should also be an integer.
 
-Note: The speed of the simulations is about 0.002c^2 + 0.04c ms/sim (if c is the number of contestants), so keep that in mind when choosing large numbers of simulations.
+Note: The speed of the simulations is about 0.0003c^2 + 0.007c ms/sim (if c is the number of contestants), so keep that in mind when choosing large numbers of simulations.

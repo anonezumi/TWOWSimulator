@@ -3,7 +3,7 @@
 #include <random> //normal_distribution
 #include <chrono> //system_clock
 #include <string> //better than c-style, or so says SO
-#include <fstream> //read from contestantdata.txt
+#include <fstream> //read from contestantdata.txt, Say
 struct Contestant
 {
     double avgRS;
@@ -55,6 +55,12 @@ struct Contestant
         score = 0;
     }
 };
+
+void Say(std::string msg, std::ofstream &file)
+{
+    std::cout << msg;
+    file << msg;
+}
 
 Contestant *GetWinner(Contestant *contestants, int contestantNum) //if there's only one contestant where alive=true, return a pointer to it
 {
@@ -129,6 +135,8 @@ Contestant *ParseContestantData(int contestantNum, int numRounds) //reads contes
 
 int main(void)
 {
+    std::ofstream file;
+    file.open("output.txt");
     bool singleMode = false;
     int sims = 1;
     int simsS = 1;
@@ -170,7 +178,7 @@ int main(void)
     if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
     for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
     {
-        int kill = round(i * 3 / 20);
+        int kill = round(i / 5);
         if (kill == 0) kill = 1;
         i -= kill;
     }
@@ -206,7 +214,7 @@ int main(void)
                     ++alivenum;
                 }
             }
-            int killnum = round((double)(alivenum) * 3 / 20); //how many to kill... maybe make death rate customizable in the future? for now, 15%
+            int killnum = round((double)(alivenum) / 5); //how many to kill... maybe make death rate customizable in the future? for now, 20%
             if (killnum == 0) killnum = 1;
             for (int i = 0; killnum > 0; ++i)
             {
@@ -242,7 +250,7 @@ int main(void)
         else
         {
             winner->wins++;
-            if (sims % 1000 == 0) //because the sims go to fast to cls every sim
+            if (sims % 1000 == 0) //because the sims go too fast to cls every sim
             {
                 system("cls");
                 std::cout << 100 * ((double)(simsS - sims) / simsS) << "% complete.\n"; //because sometimes, when waiting an hour for sims to complete, you just want to know how far you are...
@@ -250,26 +258,27 @@ int main(void)
         }
         currentRound = 0;
     }
-    if (!singleMode) //print the data! I can't wait for the day when this is logged into a file...
+    if (!singleMode)
     {
         double survPercent = 0;
         for (int i = 0; i < numRounds - 1; ++i)
         {
-            std::cout << "----------ROUND " << i + currentRoundS << "----------\n";
+            Say("----------ROUND " + std::to_string(i + currentRoundS) + "----------\n", file);
             for (int j = 0; j < contestantNum; ++j)
             {
                 survPercent = ((double)(contestants[j].rounds[i])/(double)(simsS)) * 100;
-                std::cout << contestants[j].name << " survived round " << i + currentRoundS << " " << survPercent << "% of the time.\n";
+                Say(contestants[j].name + " survived round " + std::to_string(i + currentRoundS) + " " + std::to_string(survPercent) + "% of the time.\n", file);
             }
         }
-        std::cout << "----------WINS----------\n";
+        Say("----------WINS----------\n", file);
         for (int i = 0; i < contestantNum; ++i)
         {
             survPercent = ((double)(contestants[i].wins) / (double)(simsS)) * 100;
-            std::cout << contestants[i].name << " won " << survPercent << "% of the time.\n";
+            Say(contestants[i].name + " won " + std::to_string(survPercent) + "% of the time.\n", file);
         }
     }
     delete[] contestants;
+    file.close();
     system("pause");
     return 0;
 }
