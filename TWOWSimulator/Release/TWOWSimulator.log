@@ -1,15 +1,7 @@
-﻿  Main.cpp
-Main.cpp(47): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-Main.cpp(181): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(217): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(228): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(152): warning C4101: 'e': unreferenced local variable
-Main.cpp(162): warning C4101: 'e': unreferenced local variable
-Main.cpp(172): warning C4101: 'e': unreferenced local variable
-  Generating code
-  94 of 272 functions (34.6%) were compiled, the rest were copied from previous compilation.
-    51 functions were new in current compilation
-    39 functions had inline decision re-evaluated but remain unchanged
+﻿  Generating code
+  0 of 272 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    35 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.exe
   TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.pdb (Full PDB)

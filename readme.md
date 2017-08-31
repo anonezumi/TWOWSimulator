@@ -18,7 +18,7 @@ The three pieces of data the program needs about each contestant is their name, 
 
 Name
 
-Average raw score
+Average raw score\*
 
 Standard deviation of raw scores
 
@@ -34,6 +34,8 @@ anonymouse
 ```
 
 You may add as many contestants as you want to the file. Make sure to keep track of the amount, though, as you will need to input it during step 3. **Make sure this file is in the same folder as the program.**
+
+\*You can also use normalized/relative/standardized ranks for this. In my experience, raw scores make for more accurate reuslts.
 
 ### Step 3
 

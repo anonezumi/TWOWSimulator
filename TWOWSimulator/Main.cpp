@@ -178,7 +178,7 @@ int main(void)
     if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
     for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
     {
-        int kill = round(i * 3 / 20);
+        int kill = round(i / 5);
         if (kill == 0) kill = 1;
         i -= kill;
     }
@@ -214,7 +214,7 @@ int main(void)
                     ++alivenum;
                 }
             }
-            int killnum = round((double)(alivenum) * 3 / 20); //how many to kill... maybe make death rate customizable in the future? for now, 15%
+            int killnum = round((double)(alivenum) / 5); //how many to kill... maybe make death rate customizable in the future? for now, 20%
             if (killnum == 0) killnum = 1;
             for (int i = 0; killnum > 0; ++i)
             {
