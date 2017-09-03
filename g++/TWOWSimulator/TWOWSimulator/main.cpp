@@ -6,6 +6,27 @@
 #include <fstream> //read from contestantdata.txt
 #include <stdlib.h> //system()
 #include <math.h> //round()
+
+void Say(std::string msg, std::ofstream &file, int delay = 0)
+{
+    std::cout << msg;
+	if (delay == 0) file << msg;
+    else
+	{
+		std::string zeroes = "";
+		if(delay % 1000 == delay)
+		{
+			if(delay % 100 == delay)
+			{
+				if(delay % 10 == delay) zeroes = "000";
+				else zeroes = "00";
+			}
+			else zeroes = "0";
+		}
+		file << zeroes << delay << " " << msg;
+	}
+}
+
 struct Contestant
 {
     double avgRS;
@@ -44,12 +65,11 @@ struct Contestant
             rounds[i] = 0;
         }
     }
-    void Randomize(bool singleMode) //randomize the score. should probably move the cout to main but im lazy
+    void Randomize() //randomize the score. should probably move the cout to main but im lazy
     {
         std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
         std::normal_distribution<double> normDist(avgRS, stDev);
         score = normDist(generator);
-        if(singleMode) std::cout << name << " got " << score << ".\n";
     }
     void Reset() //between games
     {
@@ -115,17 +135,12 @@ Contestant *ParseContestantData(int contestantNum, int numRounds) //reads contes
     return contestants;
 }
 
-void Say(std::string msg, std::ofstream &file)
-{
-    std::cout << msg;
-    file << msg;
-}
-
 int main(void)
 {
     std::ofstream file;
     file.open("output.txt");
     bool singleMode = false;
+	int PS2Mode = 0;
     int sims = 1;
     int simsS = 1;
     int contestantNum = 10;
@@ -162,6 +177,17 @@ int main(void)
         std::cout << "There was an error. Let's just assume it's 1.\n";
         sims = 1;
     }
+    std::cout << "Format the results in the file for PS2Bot syntax? [y/n]\n";
+	char yn = 'n';
+    try
+    {
+        std::cin >> yn;
+    }
+    catch (int e)
+    {
+        std::cout << "There was an error. Let's just assume it's no.\n";
+    }
+	if(yn == 'y') PS2Mode = 1;
     simsS = sims;
     if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
     for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
@@ -177,23 +203,11 @@ int main(void)
         winner = NULL;
         while (winner == NULL)
         {
-            if (singleMode) std::cout << "Round " << currentRound + currentRoundS << " start!\n"; //eventually I'll replace these couts with my own function
-            for (int i = 0; i < contestantNum; ++i)
-            {
-                if (contestants[i].alive)
-                {
-                    contestants[i].Randomize(singleMode);
-                    if (contestants[i].prized) //this is for double response prizes. should probably clean this up a bit
-                    {
-                        double temp = contestants[i].score;
-                        if(singleMode) std::cout << contestants[i].name << " also had a DRP!\n";
-                        contestants[i].Randomize(singleMode);
-                        if (temp > contestants[i].score) contestants[i].score = temp;
-                        contestants[i].prized = false;
-                    }
-                }
-            }
-            ContestantBubbleSort(contestants, contestantNum);
+            if (singleMode)
+			{
+				Say("--------------------\n", file, PS2Mode * 1000);
+				Say("Round " + std::to_string(currentRound + currentRoundS) + " start!\n", file, PS2Mode * 500);
+			}
             int alivenum = 0;
             for (int i = 0; i < contestantNum; ++i)
             {
@@ -202,6 +216,24 @@ int main(void)
                     ++alivenum;
                 }
             }
+            for (int i = 0; i < contestantNum; ++i)
+            {
+                if (contestants[i].alive)
+                {
+                    contestants[i].Randomize();
+					if (singleMode) Say(contestants[i].name + " got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 8000/alivenum);
+                    if (contestants[i].prized) //this is for double response prizes. should probably clean this up a bit
+                    {
+                        double temp = contestants[i].score;
+                        if (singleMode) Say(contestants[i].name + " also had a DRP!\n", file, PS2Mode * 4000/alivenum);
+						contestants[i].Randomize();
+						if (singleMode) Say(contestants[i].name + " also got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 8000/alivenum);
+                        if (temp > contestants[i].score) contestants[i].score = temp;
+                        contestants[i].prized = false;
+                    }
+                }
+            }
+            ContestantBubbleSort(contestants, contestantNum);
             int killnum = round((double)(alivenum) * 3 / 20); //how many to kill... maybe make death rate customizable in the future? for now, 15%
             if (killnum == 0) killnum = 1;
             for (int i = 0; killnum > 0; ++i)
@@ -209,7 +241,7 @@ int main(void)
                 if (contestants[i].alive)
                 {
                     contestants[i].alive = false;
-                    if (singleMode) std::cout << contestants[i].name << " has died.\n";
+                    if (singleMode) Say(contestants[i].name + " has died.\n", file, PS2Mode * 4000/alivenum);
                     --killnum;
                 }
             }
@@ -219,7 +251,7 @@ int main(void)
                 if (contestants[i].alive)
                 {
                     contestants[i].prized = true;
-                    if (singleMode) std::cout << contestants[i].name << " gets a DRP!\n";
+                    if (singleMode) Say(contestants[i].name + " gets a DRP!\n", file, PS2Mode * 4000/alivenum);
                     --prizenum;
                 }
             }
@@ -234,16 +266,8 @@ int main(void)
         {
             contestants[i].Reset();
         }
-        if (singleMode) std::cout << "The winner is: " << winner->name << "\n";
-        else
-        {
-            winner->wins++;/*
-            if (sims % 1000 == 0) //because the sims go to fast to cls every sim
-            {
-                system("cls");
-                std::cout << 100 * ((double)(simsS - sims) / simsS) << "% complete.\n"; //because sometimes, when waiting an hour for sims to complete, you just want to know how far you are...
-            }*/
-        }
+        if (singleMode) Say("The winner is: " + winner->name + "!\n", file, PS2Mode * 4000);
+        else winner->wins++;
         currentRound = 0;
     }
     if (!singleMode)
