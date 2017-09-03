@@ -115,8 +115,16 @@ Contestant *ParseContestantData(int contestantNum, int numRounds) //reads contes
     return contestants;
 }
 
+void Say(std::string msg, std::ofstream &file)
+{
+    std::cout << msg;
+    file << msg;
+}
+
 int main(void)
 {
+    std::ofstream file;
+    file.open("output.txt");
     bool singleMode = false;
     int sims = 1;
     int simsS = 1;
@@ -238,23 +246,23 @@ int main(void)
         }
         currentRound = 0;
     }
-    if (!singleMode) //print the data! I can't wait for the day when this is logged into a file...
+    if (!singleMode)
     {
         double survPercent = 0;
         for (int i = 0; i < numRounds - 1; ++i)
         {
-            std::cout << "----------ROUND " << i + currentRoundS << "----------\n";
+            Say("----------ROUND " + std::to_string(i + currentRoundS) + "----------\n", file);
             for (int j = 0; j < contestantNum; ++j)
             {
                 survPercent = ((double)(contestants[j].rounds[i])/(double)(simsS)) * 100;
-                std::cout << contestants[j].name << " survived round " << i + currentRoundS << " " << survPercent << "% of the time.\n";
+                Say(contestants[j].name + " survived round " + std::to_string(i + currentRoundS) + " " + std::to_string(survPercent) + "% of the time.\n", file);
             }
         }
-        std::cout << "----------WINS----------\n";
+        Say("----------WINS----------\n", file);
         for (int i = 0; i < contestantNum; ++i)
         {
             survPercent = ((double)(contestants[i].wins) / (double)(simsS)) * 100;
-            std::cout << contestants[i].name << " won " << survPercent << "% of the time.\n";
+            Say(contestants[i].name + " won " + std::to_string(survPercent) + "% of the time.\n", file);
         }
     }
     delete[] contestants;
