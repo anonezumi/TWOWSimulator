@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="TWOWSimulator" Database="" Version="10.0.0">
   <Project Name="TWOWSimulator" Path="TWOWSimulator/TWOWSimulator.project" Active="Yes"/>
-  <Project Name="PS2Bot" Path="PS2Bot/PS2Bot.project"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
