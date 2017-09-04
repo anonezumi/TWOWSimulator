@@ -1,13 +1,21 @@
 ﻿  Main.cpp
-Main.cpp(47): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-Main.cpp(181): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(217): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(228): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-Main.cpp(152): warning C4101: 'e': unreferenced local variable
-Main.cpp(162): warning C4101: 'e': unreferenced local variable
-Main.cpp(172): warning C4101: 'e': unreferenced local variable
+Main.cpp(78): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+Main.cpp(221): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+Main.cpp(226): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+Main.cpp(271): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+Main.cpp(284): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+Main.cpp(295): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+Main.cpp(308): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+Main.cpp(328): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+Main.cpp(166): warning C4101: 'e': unreferenced local variable
+Main.cpp(176): warning C4101: 'e': unreferenced local variable
+Main.cpp(188): warning C4101: 'e': unreferenced local variable
+Main.cpp(198): warning C4101: 'e': unreferenced local variable
+Main.cpp(209): warning C4101: 'e': unreferenced local variable
   Generating code
-  All 272 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  35 of 276 functions (12.7%) were compiled, the rest were copied from previous compilation.
+    7 functions were new in current compilation
+    36 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.exe
   TWOWSimulator.vcxproj -> C:\Users\Eli\Documents\Visual Studio 2015\Projects\TWOWSimulator\Release\TWOWSimulator.pdb (Full PDB)
