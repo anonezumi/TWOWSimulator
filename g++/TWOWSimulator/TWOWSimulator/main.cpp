@@ -7,6 +7,8 @@
 #include <stdlib.h> //system()
 #include <math.h> //round()
 
+enum Twist {NONE, JS3};
+
 void Say(std::string msg, std::ofstream &file, int delay = 0)
 {
     std::cout << msg;
@@ -38,6 +40,8 @@ struct Contestant
     std::string name;
     int *rounds;
     int numRounds;
+	int lives;
+	int points;
     Contestant() //this default should never be in the array for long
     {
         avgRS = 50;
@@ -48,6 +52,8 @@ struct Contestant
         alive = true;
         prized = false;
         rounds = NULL;
+		lives = 2;
+		points = 0;
     }
     Contestant(double pavgRS, double pstDev, int pnumRounds, std::string pname) //this is the only constructor I call
     {
@@ -64,6 +70,8 @@ struct Contestant
         {
             rounds[i] = 0;
         }
+		lives = 2;
+		points = 0;
     }
     void Randomize() //randomize the score. should probably move the cout to main but im lazy
     {
@@ -75,6 +83,8 @@ struct Contestant
     {
         alive = true;
         score = 0;
+		points = 0;
+		lives = 2;
     }
 };
 
@@ -147,6 +157,7 @@ int main(void)
     int currentRoundS = 1;
     int currentRound = 0;
     int numRounds = 0;
+	Twist twist = NONE;
     std::cout << "Type the current round number.\n"; //maybe remove the requirement of input outside of contestantdata.txt? we'll see
     try
     {
@@ -167,14 +178,26 @@ int main(void)
         std::cout << "There was an error. Let's just assume it's 10.\n";
         contestantNum = 1;
     }
+	int temp = 0;
     std::cout << "Type the number of simulations to perform.\n";
+    try
+    {
+        std::cin >> temp;
+		twist = static_cast<Twist>(temp);
+    }
+    catch (int e)
+    {
+        std::cout << "There was an error. Let's just assume it's 1.\n";
+        sims = 1;
+    }
+    std::cout << "What twist should the TWOW have?\n0 - No Twist\n1 - JPomz S3: Lives\n";
     try
     {
         std::cin >> sims;
     }
     catch (int e)
     {
-        std::cout << "There was an error. Let's just assume it's 1.\n";
+        std::cout << "There was an error. Let's just assume it's no twist.\n";
         sims = 1;
     }
     std::cout << "Format the results in the file for PS2Bot syntax? [y/n]\n";
@@ -190,12 +213,19 @@ int main(void)
 	if(yn == 'y') PS2Mode = 1;
     simsS = sims;
     if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
-    for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
-    {
-        int kill = round(i * 3 / 20);
-        if (kill == 0) kill = 1;
-        i -= kill;
-    }
+	switch(twist)
+	{
+	case NONE:
+		for (double i = contestantNum; i > 1; ++numRounds) //how many rounds are there?
+		{
+			int kill = round(i / 5);
+			if (kill == 0) kill = 1;
+			i -= kill;
+		}
+		break;
+	case JS3: numRounds = ceil((double)(contestantNum + 16) / 2);
+	}
+		
     Contestant *contestants = ParseContestantData(contestantNum, numRounds);
     Contestant *winner = NULL;
     for (; sims > 0; --sims) //you think this is bad? I could have used while(sims-->0). be thankful.
@@ -221,43 +251,98 @@ int main(void)
                 if (contestants[i].alive)
                 {
                     contestants[i].Randomize();
-					if (singleMode) Say(contestants[i].name + " got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 8000/alivenum);
+					if (singleMode) Say(contestants[i].name + " got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 20000/alivenum);
                     if (contestants[i].prized) //this is for double response prizes. should probably clean this up a bit
                     {
                         double temp = contestants[i].score;
-                        if (singleMode) Say(contestants[i].name + " also had a DRP!\n", file, PS2Mode * 4000/alivenum);
+                        if (singleMode) Say(contestants[i].name + " also had a DRP!\n", file, PS2Mode * 10000/alivenum);
 						contestants[i].Randomize();
-						if (singleMode) Say(contestants[i].name + " also got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 8000/alivenum);
+						if (singleMode) Say(contestants[i].name + " also got " + std::to_string(contestants[i].score) + "%.\n", file, PS2Mode * 20000/alivenum);
                         if (temp > contestants[i].score) contestants[i].score = temp;
                         contestants[i].prized = false;
                     }
                 }
             }
             ContestantBubbleSort(contestants, contestantNum);
-            int killnum = round((double)(alivenum) * 3 / 20); //how many to kill... maybe make death rate customizable in the future? for now, 15%
-            if (killnum == 0) killnum = 1;
-            for (int i = 0; killnum > 0; ++i)
-            {
-                if (contestants[i].alive)
-                {
-                    contestants[i].alive = false;
-                    if (singleMode) Say(contestants[i].name + " has died.\n", file, PS2Mode * 4000/alivenum);
-                    --killnum;
-                }
-            }
+			int killnum = 1;
+			switch(twist)
+			{
+			case NONE:
+				killnum = round((double)(alivenum) / 5);
+				if (killnum == 0) killnum = 1;
+				for (int i = 0; killnum > 0; ++i)
+				{
+					if (contestants[i].alive)
+					{
+						contestants[i].alive = false;
+						if (singleMode) Say(contestants[i].name + " has died.\n", file, PS2Mode * 10000/alivenum);
+						--killnum;
+					}
+				}
+				break;
+			case JS3:
+				killnum = round((double)(alivenum) * 1/3); //lose 1 life for 1/3- NR.
+				if (killnum == 0) killnum = 1;
+				for (int i = 0; killnum > 0; ++i)
+				{
+					if (contestants[i].alive)
+					{
+						--contestants[i].lives;
+						if (singleMode) std::cout << contestants[i].name << " has lost a life. They have " << contestants[i].lives << " lives left.\n";
+						--killnum;
+					}
+				}
+				killnum = round((double)(alivenum) * 1/6); //lose 2 lives for 1/6- NR.
+				if (killnum == 0) killnum = 1;
+				for (int i = 0; killnum > 0; ++i)
+				{
+					if (contestants[i].alive)
+					{
+						--contestants[i].lives;
+						if (singleMode) std::cout << contestants[i].name << " has lost another life. They have " << contestants[i].lives << " lives left.\n";
+						--killnum;
+					}
+				}
+				break;
+			}
             int prizenum = round((double)(alivenum) / 10);
             for (int i = contestantNum - 1; prizenum > 0; --i) //who gets a prize? YOU get a prize!
             {
                 if (contestants[i].alive)
                 {
                     contestants[i].prized = true;
-                    if (singleMode) Say(contestants[i].name + " gets a DRP!\n", file, PS2Mode * 4000/alivenum);
+                    if (singleMode) Say(contestants[i].name + " gets a DRP!\n", file, PS2Mode * 10000/alivenum);
                     --prizenum;
                 }
             }
+			int ranking = 0; //only used in JS3, but it needs to be declared in this scope
             for (int i = 0; i < contestantNum; ++i) //update survival rates to new data
             {
                 if (contestants[i].alive) contestants[i].rounds[currentRound]++;
+				switch(twist)
+				{
+				case JS3:
+					if (contestants[i].alive)
+					{
+						contestants[i].rounds[currentRound]++;
+						contestants[i].points += ceil(((double)(ranking)/((double)(alivenum)-1))*50);
+						if(contestants[i].points >= 100)
+						{
+							contestants[i].points -= 100;
+							if(contestants[i].lives < 4)
+							{
+								++contestants[i].lives;
+								if (singleMode) std::cout << contestants[i].name << " has regained a life! They now have " << contestants[i].lives << " lives.\n";
+							}
+						}
+						if (contestants[i].lives <= 0) 
+						{
+							contestants[i].alive = false;
+							if (singleMode) std::cout << contestants[i].name << " has died.\n";
+						}
+						++ranking;
+					}
+				}
             }
             ++currentRound;
             winner = GetWinner(contestants, contestantNum);
@@ -291,7 +376,7 @@ int main(void)
     }
     delete[] contestants;
     std::cout << "Simulation complete. Enter anything to exit.";
-	std::string temp;
-	std::cin >> temp;
+	std::string temp1;
+	std::cin >> temp1;
     return 0;
 }
