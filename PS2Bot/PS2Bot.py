@@ -50,6 +50,7 @@ async def on_message(message):
                 if script[i] == "[ENDLB]\n":
                     processlb = False
                     await create_lb(message.channel, lb)
+                    lb = []
             else:
                 if script[i] == "[STARTLB]\n":
                     processlb = True
@@ -85,28 +86,29 @@ async def create_lb(channel, lb):
     d = ImageDraw.Draw(lb)
     i = 0
     while i < length:
+        fill = (0,0,0)
         if i / length <= 0.1:
-            d.rectangle([(0, i * 20), (750, (i + 1) * 20)], fill=(255, 255, 128))
+            fill=(255, 255, 128)
         elif (i / length < 0.8) & (i != length - 1):
-            d.rectangle([(0, i * 20), (750, (i + 1) * 20)], fill=(128, 255, 128))
+            fill=(128, 255, 128)
         else:
-            d.rectangle([(0, i * 20), (750, (i + 1) * 20)], fill=(255, 128, 128))
-        score = float(lines[i][1])
-        r1 = 64 + int(abs(score - 50) / 50) * 192
-        g1 = 255
-        if score < 50: g1 = 128 + int((score / 50) * 192)
-        d.rectangle([(750, i * 20), (800, (i + 1) * 20)], fill=(r1, g1, 128))
+            fill=(255, 128, 128)
+        d.rectangle([(0, i * 20), (25, (i + 1) * 20)], fill=fill)
         d.text((0, i * 20), str(i + 1), fill=(0, 0, 0), font=gp)
-        d.text((50, i * 20), lines[i][0], fill=(0, 0, 0), font=gp)
+        d.rectangle([(25, i * 20), (150, (i + 1) * 20)], fill=fill)
+        d.text((25, i * 20), lines[i][0], fill=(0, 0, 0), font=gp)
+        d.rectangle([(150, i * 20), (750, (i + 1) * 20)], fill=fill)
         d.text((150, i * 20), responses[random.randint(0, rnum - 1)], fill=(0, 0, 0), font=gp)
+        d.rectangle([(750, i * 20), (800, (i + 1) * 20)], fill=fill)
         d.text((750, i * 20), lines[i][1], fill=(0, 0, 0), font=gp)
         d.line([(0, i * 20), (800, i * 20)], fill=(128, 128, 255))
         i = i + 1
-    d.line([(100, 0), (100, 20 * length)], fill=(128, 128, 255))
-    d.line([(700, 0), (700, 20 * length)], fill=(128, 128, 255))
+    d.line([(25, 0), (25, 20 * length)], fill=(128, 128, 255))
+    d.line([(150, 0), (150, 20 * length)], fill=(128, 128, 255))
     d.line([(750, 0), (750, 20 * length)], fill=(128, 128, 255))
     print("leaderboard complete.")
     lb.save("leaderboard.png")
+    await asyncio.sleep(3)
     await client.send_file(channel, "leaderboard.png")
 
 

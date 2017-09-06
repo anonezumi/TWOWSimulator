@@ -270,6 +270,25 @@ int main(void)
                 }
             }
             ContestantBubbleSort(contestants, contestantNum);
+			if(lbMode == 1)
+			{
+				file << "0000 [STARTLB]\n";
+				int j = 0;
+				for(int i = 1; i <= alivenum; ++i)
+				{
+					if (contestants[contestantNum - (i+j)].alive)
+					{
+						file << "0000 " << contestants[contestantNum - (i+j)].name << "\n0000 " << contestants[contestantNum - (i+j)].score << "\n0000 ";
+						if(i == alivenum) file << "[ENDLB]";
+						file << "\n";
+					}
+					else
+					{
+						++j;
+						--i;
+					}
+				}
+			}
 			int killnum = 1;
 			switch(twist)
 			{
@@ -352,16 +371,6 @@ int main(void)
             }
             ++currentRound;
             winner = GetWinner(contestants, contestantNum);
-			if(lbMode == 1)
-			{
-				file << "0000 [STARTLB]\n";
-				for(int i = 1; i <= alivenum; ++i)
-				{
-					file << "0000 " << contestants[contestantNum - i].name << "\n0000 " << contestants[contestantNum - i].score << "\n0000 ";
-					if(i == alivenum) file << "[ENDLB]";
-					file << "\n";
-				}
-			}
         }
         for (int i = 0; i < contestantNum; ++i)
         {
