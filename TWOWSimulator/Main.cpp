@@ -182,8 +182,7 @@ int main(void)
     std::cout << "Type the number of simulations to perform.\n";
     try
     {
-        std::cin >> temp;
-		twist = static_cast<Twist>(temp);
+        std::cin >> sims;
     }
     catch (int e)
     {
@@ -193,12 +192,13 @@ int main(void)
     std::cout << "What twist should the TWOW have?\n0 - No Twist\n1 - JPomz S3: Lives\n";
     try
     {
-        std::cin >> sims;
+        std::cin >> temp;
+        twist = static_cast<Twist>(temp);
     }
     catch (int e)
     {
         std::cout << "There was an error. Let's just assume it's no twist.\n";
-        sims = 1;
+        twist = NONE;
     }
     std::cout << "Format the results in the file for PS2Bot syntax? [y/n]\n";
 	char yn = 'n';
