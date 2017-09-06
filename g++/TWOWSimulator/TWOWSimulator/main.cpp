@@ -157,6 +157,7 @@ int main(void)
     int currentRoundS = 1;
     int currentRound = 0;
     int numRounds = 0;
+	int lbMode = 0;
 	Twist twist = NONE;
     std::cout << "Type the current round number.\n"; //maybe remove the requirement of input outside of contestantdata.txt? we'll see
     try
@@ -200,7 +201,7 @@ int main(void)
         std::cout << "There was an error. Let's just assume it's no twist.\n";
         twist = NONE;
     }
-    std::cout << "Format the results in the file for PS2Bot syntax? [y/n]\n";
+    std::cout << "Format the results in the file for PS2Bot syntax? [l/y/n]\n";
 	char yn = 'n';
     try
     {
@@ -211,6 +212,11 @@ int main(void)
         std::cout << "There was an error. Let's just assume it's no.\n";
     }
 	if(yn == 'y') PS2Mode = 1;
+	else if(yn == 'l')
+	{
+		PS2Mode = 1;
+		lbMode = 1;
+	}
     simsS = sims;
     if (sims <= 5) singleMode = true; //i might make the user be able to toggle this
 	switch(twist)
@@ -288,7 +294,7 @@ int main(void)
 					if (contestants[i].alive)
 					{
 						--contestants[i].lives;
-						if (singleMode) std::cout << contestants[i].name << " has lost a life. They have " << contestants[i].lives << " lives left.\n";
+						if (singleMode) Say(contestants[i].name + " has lost a life. They have " + std::to_string(contestants[i].lives) + " lives left.\n", file, PS2Mode * 10000/alivenum);
 						--killnum;
 					}
 				}
@@ -299,7 +305,7 @@ int main(void)
 					if (contestants[i].alive)
 					{
 						--contestants[i].lives;
-						if (singleMode) std::cout << contestants[i].name << " has lost another life. They have " << contestants[i].lives << " lives left.\n";
+						if (singleMode) Say(contestants[i].name + " has lost another life. They have " + std::to_string(contestants[i].lives) + " lives left.\n", file, PS2Mode * 10000/alivenum);
 						--killnum;
 					}
 				}
@@ -332,13 +338,13 @@ int main(void)
 							if(contestants[i].lives < 4)
 							{
 								++contestants[i].lives;
-								if (singleMode) std::cout << contestants[i].name << " has regained a life! They now have " << contestants[i].lives << " lives.\n";
+								if (singleMode) Say(contestants[i].name + " has regained a life! They now have " + std::to_string(contestants[i].lives) + " lives.\n", file, PS2Mode * 10000/alivenum);
 							}
 						}
 						if (contestants[i].lives <= 0) 
 						{
 							contestants[i].alive = false;
-							if (singleMode) std::cout << contestants[i].name << " has died.\n";
+							if (singleMode) Say(contestants[i].name + " has died.\n", file, PS2Mode * 10000/alivenum);
 						}
 						++ranking;
 					}
@@ -346,6 +352,16 @@ int main(void)
             }
             ++currentRound;
             winner = GetWinner(contestants, contestantNum);
+			if(lbMode == 1)
+			{
+				file << "0000 [STARTLB]\n";
+				for(int i = 1; i <= alivenum; ++i)
+				{
+					file << "0000 " << contestants[contestantNum - i].name << "\n0000 " << contestants[contestantNum - i].score << "\n0000 ";
+					if(i == alivenum) file << "[ENDLB]";
+					file << "\n";
+				}
+			}
         }
         for (int i = 0; i < contestantNum; ++i)
         {
