@@ -1,0 +1,10 @@
+Current Round
+1
+# Of Contestants
+58
+# Of Simulations
+1
+Twist (0-None, 1-JPomz S3 Lives)
+0
+Format for PS2? [l/y/n]
+l

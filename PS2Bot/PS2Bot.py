@@ -85,11 +85,13 @@ async def create_lb(channel, lb):
     lb = Image.new("RGB", (800, 20 * length), (192, 192, 192))
     d = ImageDraw.Draw(lb)
     i = 0
+    killnum = round(float(length) / 5.0)
+    prizenum = round(float(length) / 10.0)
     while i < length:
         fill = (0,0,0)
-        if i / length <= 0.1:
+        if i < prizenum:
             fill=(255, 255, 128)
-        elif (i / length < 0.8) & (i != length - 1):
+        elif (length - i) > killnum:
             fill=(128, 255, 128)
         else:
             fill=(255, 128, 128)

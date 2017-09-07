@@ -6,6 +6,7 @@
 #include <fstream> //read from contestantdata.txt
 #include <stdlib.h> //system()
 #include <math.h> //round()
+#include <cstdlib> //strtol()
 
 enum Twist {NONE, JS3};
 
@@ -159,58 +160,25 @@ int main(void)
     int numRounds = 0;
 	int lbMode = 0;
 	Twist twist = NONE;
-    std::cout << "Type the current round number.\n"; //maybe remove the requirement of input outside of contestantdata.txt? we'll see
-    try
-    {
-        std::cin >> currentRoundS;
-    }
-    catch (int e)
-    {
-        std::cout << "There was an error. Let's just assume it's round 1.\n";
-        currentRoundS = 1;
-    }
-    std::cout << "Type the number of contestants. This should not exceed the amount of contestants stored in contestantdata.txt.\n";
-    try
-    {
-        std::cin >> contestantNum;
-    }
-    catch (int e)
-    {
-        std::cout << "There was an error. Let's just assume it's 10.\n";
-        contestantNum = 1;
-    }
-    std::cout << "Type the number of simulations to perform.\n";
-    try
-    {
-		std::cin >> sims;
-    }
-    catch (int e)
-    {
-        std::cout << "There was an error. Let's just assume it's 1.\n";
-        sims = 1;
-    }
-	int temp = 0;
-    std::cout << "What twist should the TWOW have?\n0 - No Twist\n1 - JPomz S3: Lives\n";
-    try
-    {
-        std::cin >> temp;
-		twist = static_cast<Twist>(temp);
-    }
-    catch (int e)
-    {
-        std::cout << "There was an error. Let's just assume it's no twist.\n";
-        twist = NONE;
-    }
-    std::cout << "Format the results in the file for PS2Bot syntax? [l/y/n]\n";
-	char yn = 'n';
-    try
-    {
-        std::cin >> yn;
-    }
-    catch (int e)
-    {
-        std::cout << "There was an error. Let's just assume it's no.\n";
-    }
+	
+	std::ifstream settings;
+	settings.open("settings.txt");
+	std::string temp = "";
+	std::getline(settings, temp);
+	std::getline(settings, temp);
+	currentRoundS = std::strtol(temp.c_str(), NULL, 10);
+	std::getline(settings, temp);
+	std::getline(settings, temp);
+	contestantNum = std::strtol(temp.c_str(), NULL, 10);
+	std::getline(settings, temp);
+	std::getline(settings, temp);
+	sims = std::strtol(temp.c_str(), NULL, 10);
+	std::getline(settings, temp);
+	std::getline(settings, temp);
+	twist = static_cast<Twist>(std::strtol(temp.c_str(), NULL, 10));
+	std::getline(settings, temp);
+	std::getline(settings, temp);
+	char yn = temp.c_str()[0];
 	if(yn == 'y') PS2Mode = 1;
 	else if(yn == 'l')
 	{
